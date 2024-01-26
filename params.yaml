@@ -1,0 +1,19 @@
+base:
+  project: road_seg
+  random_state: 0
+
+transform:
+  raw_dataset_dir: src/data
+  raw_dataset_fname: raw_dataset
+  train_img_dir_path: train_img
+  train_mask_dir_path: train_mask 
+  test_img_dir_path: test_img
+  test_mask_dir_path: test_mask
+  valid_idx:
+    - 1
+    - 16
+    - 17
+    - 18
+    - 19
+    - 20
+  patch_size: 256
