@@ -1,4 +1,3 @@
-
 import torch
 import torch.nn as nn
 import torchvision.transforms.functional as F
@@ -36,7 +35,9 @@ class DownSampling(nn.Module):
 class UpSampling(nn.Module):
     def __init__(self, in_c: int, out_c: int) -> None:
         super().__init__()
-        self.up_sampling = nn.ConvTranspose2d(in_channels=in_c, out_channels=out_c, kernel_size=2, stride=2)
+        self.up_sampling = nn.ConvTranspose2d(
+            in_channels=in_c, out_channels=out_c, kernel_size=2, stride=2
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.up_sampling(x)
@@ -51,13 +52,28 @@ class CropAndConcat(nn.Module):
 class UNet(nn.Module):
     def __init__(self, in_channel: int, out_channel: int) -> None:
         super().__init__()
-        self.down_convs = nn.ModuleList([DoubleConv(in_c, out_c) for in_c, out_c in [(in_channel, 64), (64, 128), (128, 256), (256, 512)]])
+        self.down_convs = nn.ModuleList(
+            [
+                DoubleConv(in_c, out_c)
+                for in_c, out_c in [(in_channel, 64), (64, 128), (128, 256), (256, 512)]
+            ]
+        )
         self.down_samples = nn.ModuleList([DownSampling() for _ in range(4)])
 
         self.middle_conv = nn.Conv2d(512, 1024, kernel_size=3, padding=1)
 
-        self.up_samples = nn.ModuleList([UpSampling(in_c, out_c) for in_c, out_c in [(1024, 512), (512, 256), (256, 128), (128, 64)]])
-        self.up_convs = nn.ModuleList([DoubleConv(in_c, out_c) for in_c, out_c in [(1024, 512), (512, 256), (256, 128), (128, 64)]])
+        self.up_samples = nn.ModuleList(
+            [
+                UpSampling(in_c, out_c)
+                for in_c, out_c in [(1024, 512), (512, 256), (256, 128), (128, 64)]
+            ]
+        )
+        self.up_convs = nn.ModuleList(
+            [
+                DoubleConv(in_c, out_c)
+                for in_c, out_c in [(1024, 512), (512, 256), (256, 128), (128, 64)]
+            ]
+        )
 
         self.final_conv = nn.Conv2d(64, out_channel, kernel_size=1)
 

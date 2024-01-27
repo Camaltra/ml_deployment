@@ -2,13 +2,35 @@ stages:
   transform:
     cmd: python src/stages/transform.py --config=params.yaml
     deps:
-      - src/stages/transform.py
-      - src/utils/transform.py
+    - src/stages/transform.py
+    - src/utils/transform.py
     params:
-      - base
-      - transform
+    - base
+    - transform
     outs:
-      - src/data/train_img
-      - src/data/train_mask
-      - src/data/test_img
-      - src/data/test_mask
+    - src/data/train/img
+    - src/data/train/mask
+    - src/data/valid/img
+    - src/data/valid/mask
+  train:
+    cmd: python src/stages/train.py --config=params.yaml
+    deps:
+    - src/stages/transform.py
+    - src/utils/transform.py
+    - src/utils/train.py
+    - src/utils/dataset.py
+    - src/utils/model/u_net.py
+    - src/stages/train.py
+    - src/data/train/img
+    - src/data/train/mask
+    - src/data/valid/img
+    - src/data/valid/mask
+    params:
+    - base
+    - transform
+    - train
+    outs:
+    - models/model_pickle.pkl
+    metrics:
+      - training/metrics.json:
+          cache: false

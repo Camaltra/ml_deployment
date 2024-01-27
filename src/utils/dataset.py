@@ -8,13 +8,19 @@ from torchvision import transforms
 import os
 
 
-def get_train_transform(image_height: int, image_width: int) -> A.Compose:
+def get_train_transform(
+    image_size: int,
+    max_rotate: float,
+    p_rotate: float,
+    p_flip_vert: float,
+    p_flip_honz: float,
+) -> A.Compose:
     return A.Compose(
         [
-            A.Resize(height=image_height, width=image_width),
-            A.Rotate(limit=35, p=1.0),
-            A.HorizontalFlip(p=0.5),
-            A.VerticalFlip(p=0.5),
+            A.Resize(height=image_size, width=image_size),
+            A.Rotate(limit=max_rotate, p=p_rotate),
+            A.HorizontalFlip(p=p_flip_vert),
+            A.VerticalFlip(p=p_flip_honz),
             A.Normalize(
                 mean=[0.0, 0.0, 0.0], std=[1.0, 1.0, 1.0], max_pixel_value=255.0
             ),
@@ -23,10 +29,10 @@ def get_train_transform(image_height: int, image_width: int) -> A.Compose:
     )
 
 
-def get_valid_transform(image_height: int, image_width: int) -> A.Compose:
+def get_valid_transform(image_size: int) -> A.Compose:
     return A.Compose(
         [
-            A.Resize(height=image_height, width=image_width),
+            A.Resize(height=image_size, width=image_size),
             A.Normalize(
                 mean=[0.0, 0.0, 0.0], std=[1.0, 1.0, 1.0], max_pixel_value=255.0
             ),
@@ -39,9 +45,9 @@ class RoadDataset(Dataset):
     def __init__(self, dataset_type: str, transform: None | A.Compose = None) -> None:
         self.items = [
             img_path.split("/")[-1]
-            for img_path in glob(f"dataset/{dataset_type}/img/*.tif")
+            for img_path in glob(f"src/data/{dataset_type}/img/*.tif")
         ]
-        self.path = f"dataset/{dataset_type}"
+        self.path = f"src/data/{dataset_type}"
         self.transform = transform
 
     def __len__(self):

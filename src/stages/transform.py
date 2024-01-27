@@ -18,22 +18,22 @@ def transform(params):
     data_dir = Path(params.transform.raw_dataset_dir)
     raw_data_path = data_dir / params.transform.raw_dataset_fname
 
-    train_img_dir_path = data_dir / params.transform.train_img_dir_path
-    train_mask_dir_path = data_dir / params.transform.train_mask_dir_path
-    test_img_dir_path = data_dir / params.transform.test_img_dir_path
-    test_mask_dir_path = data_dir / params.transform.test_mask_dir_path
+    train_dir_path_img = data_dir / params.transform.train_dir_path / "img"
+    train_dir_path_mask = data_dir / params.transform.train_dir_path / "mask"
+    valid_dir_path_img = data_dir / params.transform.valid_dir_path / "img"
+    valid_dir_path_mask = data_dir / params.transform.valid_dir_path / "mask"
 
-    create_folders([train_img_dir_path, train_mask_dir_path, test_img_dir_path, test_mask_dir_path])
+    create_folders([train_dir_path_img, train_dir_path_mask, valid_dir_path_img, valid_dir_path_mask])
 
     valid_idx_set = set(params.transform.valid_idx)
     patch_size = params.transform.patch_size
 
     builder = BuildDataset(
         raw_data_path,
-        train_img_dir_path,
-        train_mask_dir_path,
-        test_img_dir_path,
-        test_mask_dir_path,
+        train_dir_path_img,
+        train_dir_path_mask,
+        valid_dir_path_img,
+        valid_dir_path_mask,
         valid_idx_set,
         patch_size
     )
