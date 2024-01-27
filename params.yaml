@@ -6,8 +6,8 @@ transform:
   raw_dataset_dir: src/data
   raw_dataset_fname: raw_dataset
   train_dir_path: train
-  valid_dir_path: valid
-  valid_idx:
+  test_dir_path: test
+  test_idx:
     - 1
     - 16
     - 17
@@ -16,10 +16,17 @@ transform:
     - 20
   patch_size: 256
 
+split:
+  prc_valid: 0.2
+  valid_dir_path: valid
+
 train:
   batch_size: 16
-  num_epoch: 10
+  num_epoch: 1
   lr: 0.001
   model_pickle_fpath: models/model_pickle.pkl
   augmentations: {p_flip_honz: 0.5, p_flip_vert: 0.5, max_rotate: 35.0, p_rotate: 1.0}
   training_tmp_output_base_fpath: src/training
+
+eval:
+  metrics_file: evaluation/metrics.json

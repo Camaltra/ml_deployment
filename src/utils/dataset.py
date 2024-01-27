@@ -73,3 +73,8 @@ def get_loaders(
     return DataLoader(trn_ds, batch_size=16, shuffle=True), DataLoader(
         val_ds, batch_size=16, shuffle=False
     )
+
+
+def get_test_loader(transformer: A.Compose) -> DataLoader:
+    test_ds = RoadDataset("test", transformer)
+    return DataLoader(test_ds, batch_size=16, shuffle=False)
