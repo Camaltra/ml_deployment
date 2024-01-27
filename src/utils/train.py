@@ -41,18 +41,11 @@ class Trainer(Pipeline):
         self.criterion = nn.BCEWithLogitsLoss()
 
         self.trn_loader, self.val_loader = get_loaders(train_transform, valid_transform)
-        self.tmp_train_result_file_path = f"{training_tmp_output_base_fpath}/{time.strftime('%Y-%m-%d-%H-%M-%S')}"
+        self.tmp_train_result_file_path = (
+            f"{training_tmp_output_base_fpath}/{time.strftime('%Y-%m-%d-%H-%M-%S')}"
+        )
         if not os.path.exists(self.tmp_train_result_file_path):
             os.makedirs(self.tmp_train_result_file_path)
-
-    @staticmethod
-    def _get_device():
-        if torch.backends.cuda.is_built():
-            return "cuda"
-        elif torch.backends.mps.is_available():
-            return "mps"
-        else:
-            return "cpu"
 
     def run(self):
         self._train()
@@ -81,7 +74,7 @@ class Trainer(Pipeline):
         loop = tqdm(self.trn_loader)
         total_loss = 0
 
-        for batch_idx, (data, targets) in enumerate(loop):
+        for _, (data, targets) in enumerate(loop):
             data = data.to(self.device)
             targets = targets.float().unsqueeze(1).to(self.device)
 
@@ -123,7 +116,7 @@ class Trainer(Pipeline):
         total_loss /= len(self.val_loader)
 
         return total_loss, global_accuracy, global_dice_score
-    
+
     def _save_samples_predicted(self, epoch: int):
         self.model.eval()
         for idx, (x, y) in enumerate(self.val_loader):
@@ -132,8 +125,11 @@ class Trainer(Pipeline):
             with torch.no_grad():
                 preds = torch.sigmoid(self.model(x))
                 preds = (preds > 0.5).float()
-            torchvision.utils.save_image(preds, f"{self.tmp_train_result_file_path}/{epoch}_pred_{idx}.png")
             torchvision.utils.save_image(
-                y.unsqueeze(1).float(), f"{self.tmp_train_result_file_path}/{epoch}_truth_{idx}.png"
+                preds, f"{self.tmp_train_result_file_path}/{epoch}_pred_{idx}.png"
+            )
+            torchvision.utils.save_image(
+                y.unsqueeze(1).float(),
+                f"{self.tmp_train_result_file_path}/{epoch}_truth_{idx}.png",
             )
             break
