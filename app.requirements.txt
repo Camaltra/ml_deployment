@@ -1,0 +1,10 @@
+flask
+pydantic
+pydantic[email]
+uvicorn
+black
+torch
+torchvision
+pillow
+albumentations
+python-box

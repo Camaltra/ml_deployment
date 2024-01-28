@@ -5,7 +5,6 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader
 from glob import glob
 from torchvision import transforms
-import os
 
 
 def get_train_transform(
