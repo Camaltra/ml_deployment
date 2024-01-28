@@ -1,5 +1,4 @@
 stages:
-
   transform:
     cmd: python src/stages/transform.py --config=params.yaml
     deps:
@@ -13,7 +12,6 @@ stages:
     - src/data/train/mask
     - src/data/test/img
     - src/data/test/mask
-
   split:
     cmd: python src/stages/split.py --config=params.yaml
     deps:
@@ -30,7 +28,6 @@ stages:
     outs:
     - src/data/valid/img
     - src/data/valid/mask
-
   train:
     cmd: python src/stages/train.py --config=params.yaml
     deps:
@@ -50,7 +47,6 @@ stages:
     - train
     outs:
     - models/model_pickle.pkl
-
   evaluate:
     cmd: python src/stages/eval.py --config=params.yaml
     deps:

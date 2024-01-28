@@ -1,0 +1,8 @@
+src/data
+dvclive
+evaluation
+src/training
+dvc.lock
+dvc.yaml
+dvc.requirements.txt
+**/__pycache__
