@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np
 import os
 import logging
+from pathlib import Path
 
 from src.utils.pipeline import Pipeline
 
@@ -10,11 +11,11 @@ from src.utils.pipeline import Pipeline
 class BuildDataset(Pipeline):
     def __init__(
         self,
-        raw_data_path: str,
-        train_img_dir_path: str,
-        train_mask_dir_path: str,
-        test_img_dir_path: str,
-        test_mask_dir_path: str,
+        raw_data_path: Path,
+        train_img_dir_path: Path,
+        train_mask_dir_path: Path,
+        test_img_dir_path: Path,
+        test_mask_dir_path: Path,
         valid_idx_set: set[int],
         patch_size: int,
     ):
@@ -31,7 +32,7 @@ class BuildDataset(Pipeline):
         self.test_patch_count = 0
         self.logger = logging.getLogger("BuildDataset")
 
-    def _load_img_mask_by_idx(self, img_idx):
+    def _load_img_mask_by_idx(self, img_idx: int) -> tuple[np.array, np.array]:
         img = cv2.imread(f"{self.raw_data_path}/{img_idx}/Ottawa-{img_idx}.tif", 1)
 
         mask = np.array(
@@ -41,14 +42,14 @@ class BuildDataset(Pipeline):
 
         return img, mask
 
-    def _is_train_img(self, img_idx):
+    def _is_train_img(self, img_idx: int) -> bool:
         return not img_idx in self.valid_idx_set
 
     @staticmethod
-    def _save_patch(output_path, patch):
+    def _save_patch(output_path: str, patch: np.array):
         cv2.imwrite(output_path, patch)
 
-    def _process_img(self, img_idx):
+    def _process_img(self, img_idx: int) -> None:
         is_train_img = self._is_train_img(int(img_idx))
         if is_train_img:
             output_img_path = self.train_img_dir_path
@@ -95,7 +96,7 @@ class BuildDataset(Pipeline):
                     )
                     self.logger.debug(e)
 
-    def run(self):
+    def run(self) -> None:
         for folder_name in os.listdir(self.raw_data_path):
             self._process_img(folder_name)
 

@@ -2,18 +2,19 @@ from src.utils.pipeline import Pipeline
 import os
 import shutil
 import random
+from pathlib import Path
 
 
 class Splitter(Pipeline):
     def __init__(
         self,
-        valid_dir_path_img: str,
-        valid_dir_path_mask: str,
-        train_dir_path_img: str,
-        train_dir_path_mask: str,
-        prc_valid: int,
+        valid_dir_path_img: Path,
+        valid_dir_path_mask: Path,
+        train_dir_path_img: Path,
+        train_dir_path_mask: Path,
+        prc_valid: float,
         random: int,
-    ):
+    ) -> None:
         super().__init__()
         self.valid_dir_path_img = valid_dir_path_img
         self.valid_dir_path_mask = valid_dir_path_mask
@@ -22,7 +23,7 @@ class Splitter(Pipeline):
         self.prc_valid = prc_valid
         self.random = random
 
-    def run(self):
+    def run(self) -> None:
         random.seed(self.random)
         train_data = os.listdir(self.train_dir_path_img)
         num_to_select = int(len(train_data) * self.prc_valid)

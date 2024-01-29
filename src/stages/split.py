@@ -1,15 +1,14 @@
-import sys
 from pathlib import Path
 
 import argparse
-import os
+from box import ConfigBox
 
 from src.utils.load_params import load_params
 from src.utils.split import Splitter
 from src.utils.folder_utils import create_folders
 
 
-def split(params):
+def split(params: ConfigBox) -> None:
     data_dir = Path(params.transform.raw_dataset_dir)
     valid_dir_path_img = data_dir / params.split.valid_dir_path / "img"
     valid_dir_path_mask = data_dir / params.split.valid_dir_path / "mask"

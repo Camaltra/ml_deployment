@@ -50,7 +50,7 @@ class RoadDataset(Dataset):
         self.path = f"src/data/{dataset_type}"
         self.transform = transform
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.items)
 
     def __getitem__(self, ix: int) -> tuple[np.ndarray, np.ndarray]:

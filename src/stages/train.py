@@ -1,14 +1,11 @@
-import sys
-from pathlib import Path
-
 import argparse
-import os
+from box import ConfigBox
 
 from src.utils.load_params import load_params
 from src.utils.train import Trainer
 
 
-def train(params):
+def train(params: ConfigBox) -> None:
     image_size = params.transform.patch_size
     num_epoch = params.train.num_epoch
     model_save_fpath = params.train.model_pickle_fpath

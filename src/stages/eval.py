@@ -1,14 +1,13 @@
-import sys
 from pathlib import Path
 
 import argparse
-import os
+from box import ConfigBox
 
 from src.utils.load_params import load_params
 from src.utils.eval import Evaluator
 
 
-def train(params):
+def evaluation(params: ConfigBox) -> None:
     data_dir = Path(params.transform.raw_dataset_dir)
     model_save_fpath = params.train.model_pickle_fpath
     test_dir_path_img = data_dir / params.transform.test_dir_path / "img"
@@ -35,4 +34,4 @@ if __name__ == "__main__":
     args = args_parser.parse_args()
     params_path = args.config
     params = load_params(params_path)
-    train(params)
+    evaluation(params)

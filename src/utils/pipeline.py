@@ -7,11 +7,11 @@ class Pipeline(ABC):
         pass
 
     @abstractmethod
-    def run(self):
+    def run(self) -> None:
         pass
 
     @staticmethod
-    def _get_device():
+    def _get_device() -> str:
         if torch.backends.cuda.is_built():
             return "cuda"
         elif torch.backends.mps.is_available():
