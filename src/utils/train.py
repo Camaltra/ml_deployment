@@ -10,6 +10,8 @@ from dvclive import Live
 from typing import Any
 import torchvision
 import os
+import numpy as np
+import random
 
 
 class Trainer(Pipeline):
@@ -22,6 +24,7 @@ class Trainer(Pipeline):
         augmentations: dict[Any],
         model_save_fpath: str,
         training_tmp_output_base_fpath: str,
+        random_state: int,
     ) -> None:
         super().__init__()
         self.batch_size = batch_size
@@ -32,20 +35,34 @@ class Trainer(Pipeline):
 
         self.device = self._get_device()
         self.logger = logging.getLogger("Trainer")
-        self.model = UNet(3, 1).to(self.device)
 
         train_transform = get_train_transform(self.image_size, **augmentations)
         valid_transform = get_valid_transform(self.image_size)
 
+        self.trn_loader, self.val_loader = get_loaders(train_transform, valid_transform, random_state)
+
+        self._set_seed(random_state)
+        self.model = UNet(3, 1).to(self.device)
+
         self.opt = torch.optim.Adam(self.model.parameters(), self.lr)
         self.criterion = nn.BCEWithLogitsLoss()
 
-        self.trn_loader, self.val_loader = get_loaders(train_transform, valid_transform)
         self.tmp_train_result_file_path = (
             f"{training_tmp_output_base_fpath}/{time.strftime('%Y-%m-%d-%H-%M-%S')}"
         )
         if not os.path.exists(self.tmp_train_result_file_path):
             os.makedirs(self.tmp_train_result_file_path)
+
+    @staticmethod
+    def _set_seed(seed):
+        torch.manual_seed(seed)
+
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+        np.random.seed(seed)
+
+        random.seed(seed)
 
     def run(self):
         self._train()

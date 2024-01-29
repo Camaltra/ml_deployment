@@ -1,6 +1,6 @@
 base:
   project: road_seg
-  random_state: 0
+  random_state: 42
 
 transform:
   raw_dataset_dir: src/data
@@ -22,7 +22,7 @@ split:
 
 train:
   batch_size: 16
-  num_epoch: 1
+  num_epoch: 10
   lr: 0.001
   model_pickle_fpath: models/model_pickle.pkl
   augmentations: {p_flip_honz: 0.5, p_flip_vert: 0.5, max_rotate: 35.0, p_rotate: 1.0}
