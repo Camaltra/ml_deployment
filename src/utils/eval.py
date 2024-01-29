@@ -3,23 +3,23 @@ from src.utils.dataset import get_test_loader, get_valid_transform
 import torch
 import json
 from tqdm import tqdm
+from pathlib import Path
 
 
 class Evaluator(Pipeline):
     def __init__(
         self,
-        model_save_fpath: str,
-        test_dir_path_img,
-        test_dir_path_mask,
-        patch_size,
-        metric_fpath,
-    ):
+        model_save_fpath: Path,
+        test_dir_path_img: Path,
+        test_dir_path_mask: Path,
+        patch_size: int,
+        metric_fpath: Path,
+    ) -> None:
         super().__init__()
         self.model_save_fpath = model_save_fpath
         self.test_dir_path_img = test_dir_path_img
         self.test_dir_path_mask = test_dir_path_mask
         self.metric_fpath = metric_fpath
-        print(self.metric_fpath)
 
         trms = get_valid_transform(patch_size)
 
@@ -28,7 +28,7 @@ class Evaluator(Pipeline):
 
         self.loader = get_test_loader(trms)
 
-    def _compute_test_metrics(self):
+    def _compute_test_metrics(self) -> tuple[int, int]:
         num_correct = 0
         num_pixels = 0
         dice_score = 0
@@ -55,7 +55,7 @@ class Evaluator(Pipeline):
 
         return global_accuracy.item(), global_dice_score.item()
 
-    def run(self):
+    def run(self) -> None:
         acc, dice = self._compute_test_metrics()
 
         json.dump(

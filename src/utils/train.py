@@ -39,7 +39,9 @@ class Trainer(Pipeline):
         train_transform = get_train_transform(self.image_size, **augmentations)
         valid_transform = get_valid_transform(self.image_size)
 
-        self.trn_loader, self.val_loader = get_loaders(train_transform, valid_transform, random_state)
+        self.trn_loader, self.val_loader = get_loaders(
+            train_transform, valid_transform, random_state
+        )
 
         self._set_seed(random_state)
         self.model = UNet(3, 1).to(self.device)
@@ -54,7 +56,7 @@ class Trainer(Pipeline):
             os.makedirs(self.tmp_train_result_file_path)
 
     @staticmethod
-    def _set_seed(seed):
+    def _set_seed(seed) -> None:
         torch.manual_seed(seed)
 
         torch.backends.cudnn.deterministic = True
@@ -64,10 +66,10 @@ class Trainer(Pipeline):
 
         random.seed(seed)
 
-    def run(self):
+    def run(self) -> None:
         self._train()
 
-    def _train(self):
+    def _train(self) -> None:
         with Live(save_dvc_exp=True) as live:
             for epoch in range(self.num_epoch):
                 train_loss = self._train_fn()
@@ -87,7 +89,7 @@ class Trainer(Pipeline):
 
         torch.save(self.model, self.model_save_fpath)
 
-    def _train_fn(self):
+    def _train_fn(self) -> float:
         loop = tqdm(self.trn_loader)
         total_loss = 0
 
@@ -107,7 +109,7 @@ class Trainer(Pipeline):
 
         return total_loss / len(self.trn_loader)
 
-    def _compute_val_metrics(self):
+    def _compute_val_metrics(self) -> tuple[float, float, float]:
         num_correct = 0
         num_pixels = 0
         dice_score = 0
@@ -134,7 +136,7 @@ class Trainer(Pipeline):
 
         return total_loss, global_accuracy, global_dice_score
 
-    def _save_samples_predicted(self, epoch: int):
+    def _save_samples_predicted(self, epoch: int) -> None:
         self.model.eval()
         for idx, (x, y) in enumerate(self.val_loader):
             x = x.to(self.device)

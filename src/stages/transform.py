@@ -2,14 +2,15 @@ import sys
 from pathlib import Path
 
 import argparse
-import os
+
+from box import ConfigBox
 
 from src.utils.load_params import load_params
 from src.utils.transform import BuildDataset
 from src.utils.folder_utils import create_folders
 
 
-def transform(params):
+def transform(params: ConfigBox) -> None:
     data_dir = Path(params.transform.raw_dataset_dir)
     raw_data_path = data_dir / params.transform.raw_dataset_fname
 
