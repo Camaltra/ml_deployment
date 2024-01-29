@@ -26,7 +26,7 @@ def train(params):
         augmentations=augmentations,
         model_save_fpath=model_save_fpath,
         training_tmp_output_base_fpath=training_tmp_output_base_fpath,
-        random_state=random_state
+        random_state=random_state,
     )
     trainer.run()
 

@@ -20,7 +20,11 @@ def train(params):
     patch_size = params.transform.patch_size
 
     evaluator = Evaluator(
-        model_save_fpath, test_dir_path_img, test_dir_path_mask, patch_size, metrics_fpath
+        model_save_fpath,
+        test_dir_path_img,
+        test_dir_path_mask,
+        patch_size,
+        metrics_fpath,
     )
     evaluator.run()
 

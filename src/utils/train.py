@@ -39,7 +39,9 @@ class Trainer(Pipeline):
         train_transform = get_train_transform(self.image_size, **augmentations)
         valid_transform = get_valid_transform(self.image_size)
 
-        self.trn_loader, self.val_loader = get_loaders(train_transform, valid_transform, random_state)
+        self.trn_loader, self.val_loader = get_loaders(
+            train_transform, valid_transform, random_state
+        )
 
         self._set_seed(random_state)
         self.model = UNet(3, 1).to(self.device)
