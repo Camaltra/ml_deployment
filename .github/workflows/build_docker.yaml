@@ -11,6 +11,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Update SSL-related Python libraries
+      run: |
+        pip install --upgrade pip
+        pip install --upgrade cryptography urllib3 pyopenssl
+
     - name: Install DVC
       run: |
         pip install 'dvc['s3']'
