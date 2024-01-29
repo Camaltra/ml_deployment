@@ -16,6 +16,7 @@ def train(params):
     training_tmp_output_base_fpath = params.train.training_tmp_output_base_fpath
     lr = params.train.lr
     batch_size = params.train.batch_size
+    random_state = params.base.random_state
 
     trainer = Trainer(
         image_size=image_size,
@@ -25,6 +26,7 @@ def train(params):
         augmentations=augmentations,
         model_save_fpath=model_save_fpath,
         training_tmp_output_base_fpath=training_tmp_output_base_fpath,
+        random_state=random_state
     )
     trainer.run()
 

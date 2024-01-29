@@ -5,6 +5,7 @@ import numpy as np
 from torch.utils.data import Dataset, DataLoader
 from glob import glob
 from torchvision import transforms
+import torch
 
 
 def get_train_transform(
@@ -65,11 +66,13 @@ class RoadDataset(Dataset):
 
 
 def get_loaders(
-    train_transform: A.Compose, valid_transform: A.Compose
+    train_transform: A.Compose, valid_transform: A.Compose, random_state: int,
 ) -> tuple[DataLoader, DataLoader]:
     trn_ds = RoadDataset("train", train_transform)
     val_ds = RoadDataset("valid", valid_transform)
-    return DataLoader(trn_ds, batch_size=16, shuffle=True), DataLoader(
+    generator = torch.Generator()
+    generator.manual_seed(random_state)
+    return DataLoader(trn_ds, batch_size=16, shuffle=True, generator=generator), DataLoader(
         val_ds, batch_size=16, shuffle=False
     )
 
