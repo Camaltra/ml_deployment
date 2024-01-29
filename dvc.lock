@@ -1,0 +1,245 @@
+schema: '2.0'
+stages:
+  transform:
+    cmd: python src/stages/transform.py --config=params.yaml
+    deps:
+    - path: src/stages/transform.py
+      hash: md5
+      md5: 3b3c1db23b88c57135290920eb572b0b
+      size: 1369
+    - path: src/utils/transform.py
+      hash: md5
+      md5: f552adf80c0f0c4ef72316a6b9ea6aa1
+      size: 3617
+    params:
+      params.yaml:
+        base:
+          project: road_seg
+          random_state: 42
+        transform:
+          raw_dataset_dir: src/data
+          raw_dataset_fname: raw_dataset
+          train_dir_path: train
+          test_dir_path: test
+          test_idx:
+          - 1
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          patch_size: 256
+    outs:
+    - path: src/data/test/img
+      hash: md5
+      md5: eae05c574c7b495f99f63aa02f7a83e6.dir
+      size: 185775094
+      nfiles: 1380
+    - path: src/data/test/mask
+      hash: md5
+      md5: 944b887701d13af6e13774514dd465cf.dir
+      size: 362225160
+      nfiles: 1380
+    - path: src/data/train/img
+      hash: md5
+      md5: 531791941f750a744cae672e00fef089.dir
+      size: 211544774
+      nfiles: 1622
+    - path: src/data/train/mask
+      hash: md5
+      md5: ff0662b1c75ad3f5e799ec79b9b1280e.dir
+      size: 425745804
+      nfiles: 1622
+  split:
+    cmd: python src/stages/split.py --config=params.yaml
+    deps:
+    - path: src/data/train/img
+      hash: md5
+      md5: c742d22d2ebf89cc02552f7d6efc99d1.dir
+      size: 169275328
+      nfiles: 1298
+    - path: src/data/train/mask
+      hash: md5
+      md5: be3e68c4d53b683d17a84e7f1d189293.dir
+      size: 340701636
+      nfiles: 1298
+    - path: src/stages/split.py
+      hash: md5
+      md5: ff52655a48f26cd5e47bb0965e309d66
+      size: 1179
+    - path: src/stages/transform.py
+      hash: md5
+      md5: 3b3c1db23b88c57135290920eb572b0b
+      size: 1369
+    - path: src/utils/split.py
+      hash: md5
+      md5: 20dc134b50a180a3498b7c2354dabbb6
+      size: 1288
+    - path: src/utils/transform.py
+      hash: md5
+      md5: f552adf80c0f0c4ef72316a6b9ea6aa1
+      size: 3617
+    params:
+      params.yaml:
+        base:
+          project: road_seg
+          random_state: 42
+        split:
+          prc_valid: 0.2
+          valid_dir_path: valid
+        transform:
+          raw_dataset_dir: src/data
+          raw_dataset_fname: raw_dataset
+          train_dir_path: train
+          test_dir_path: test
+          test_idx:
+          - 1
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          patch_size: 256
+    outs:
+    - path: src/data/valid/img
+      hash: md5
+      md5: af584923aaa0b31cc803ec4f21c5dfd3.dir
+      size: 42269446
+      nfiles: 324
+    - path: src/data/valid/mask
+      hash: md5
+      md5: 03dd852d4f0f7a83538b63d5ccec574f.dir
+      size: 85044168
+      nfiles: 324
+  train:
+    cmd: python src/stages/train.py --config=params.yaml
+    deps:
+    - path: src/data/train/img
+      hash: md5
+      md5: c742d22d2ebf89cc02552f7d6efc99d1.dir
+      size: 169275328
+      nfiles: 1298
+    - path: src/data/train/mask
+      hash: md5
+      md5: be3e68c4d53b683d17a84e7f1d189293.dir
+      size: 340701636
+      nfiles: 1298
+    - path: src/data/valid/img
+      hash: md5
+      md5: af584923aaa0b31cc803ec4f21c5dfd3.dir
+      size: 42269446
+      nfiles: 324
+    - path: src/data/valid/mask
+      hash: md5
+      md5: 03dd852d4f0f7a83538b63d5ccec574f.dir
+      size: 85044168
+      nfiles: 324
+    - path: src/stages/train.py
+      hash: md5
+      md5: 416c15c110950aa61faa47af25bbd3a8
+      size: 1149
+    - path: src/stages/transform.py
+      hash: md5
+      md5: 3b3c1db23b88c57135290920eb572b0b
+      size: 1369
+    - path: src/utils/dataset.py
+      hash: md5
+      md5: 24b07c9df0fb53724ece02d26ffe5a68
+      size: 2564
+    - path: src/utils/model/u_net.py
+      hash: md5
+      md5: 41c2ab90d505d3a0948cdfd5bb4035a1
+      size: 3145
+    - path: src/utils/train.py
+      hash: md5
+      md5: 0340eef071fe24bedb8977613a404c9e
+      size: 4934
+    - path: src/utils/transform.py
+      hash: md5
+      md5: f552adf80c0f0c4ef72316a6b9ea6aa1
+      size: 3617
+    params:
+      params.yaml:
+        base:
+          project: road_seg
+          random_state: 42
+        train:
+          batch_size: 16
+          num_epoch: 10
+          lr: 0.001
+          model_pickle_fpath: models/model_pickle.pkl
+          augmentations:
+            p_flip_honz: 0.5
+            p_flip_vert: 0.5
+            max_rotate: 35.0
+            p_rotate: 1.0
+          training_tmp_output_base_fpath: src/training
+        transform:
+          raw_dataset_dir: src/data
+          raw_dataset_fname: raw_dataset
+          train_dir_path: train
+          test_dir_path: test
+          test_idx:
+          - 1
+          - 16
+          - 17
+          - 18
+          - 19
+          - 20
+          patch_size: 256
+    outs:
+    - path: models/model_pickle.pkl
+      hash: md5
+      md5: 34b927762b60ce51a21ab59562452b6c
+      size: 86492090
+  evaluate:
+    cmd: python src/stages/eval.py --config=params.yaml
+    deps:
+    - path: models/model_pickle.pkl
+      hash: md5
+      md5: 34b927762b60ce51a21ab59562452b6c
+      size: 86492090
+    - path: src/data/test/img
+      hash: md5
+      md5: eae05c574c7b495f99f63aa02f7a83e6.dir
+      size: 185775094
+      nfiles: 1380
+    - path: src/data/test/mask
+      hash: md5
+      md5: 944b887701d13af6e13774514dd465cf.dir
+      size: 362225160
+      nfiles: 1380
+    - path: src/stages/eval.py
+      hash: md5
+      md5: 3f2702c89775a937b6438cf944b546b3
+      size: 996
+    - path: src/utils/eval.py
+      hash: md5
+      md5: b109ae15f8f5217ec9cec007f5b3b7b3
+      size: 1991
+    params:
+      params.yaml:
+        base:
+          project: road_seg
+          random_state: 42
+        eval:
+          metrics_file: evaluation/metrics.json
+        split:
+          prc_valid: 0.2
+          valid_dir_path: valid
+        train:
+          batch_size: 16
+          num_epoch: 10
+          lr: 0.001
+          model_pickle_fpath: models/model_pickle.pkl
+          augmentations:
+            p_flip_honz: 0.5
+            p_flip_vert: 0.5
+            max_rotate: 35.0
+            p_rotate: 1.0
+          training_tmp_output_base_fpath: src/training
+    outs:
+    - path: evaluation/metrics.json
+      hash: md5
+      md5: 26a65f259f332b73ad80ca291ad010e8
+      size: 62
