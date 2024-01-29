@@ -44,6 +44,9 @@ By Preference, please fork it to make pipeline work for you while deploying mode
 git clone https://github.com/.../ml_deployment.git
 cd ml_deployment
 ```
+[Install DVC](https://dvc.org/doc/install)
+
+
 Create an S3 bucket with IAM user in AWS (or use other Cloud plateform (You may need to change the requirements.txt)) and connect your account using AWS CLI. Change the DVC config file `.dvc/config` to connect to your storage.
 Install the DVC requirements
 ```bash
@@ -51,6 +54,8 @@ pytho3n -m venv venv
 source venv/bin/activate
 pip install -r dvc.requirements.txt
 ```
+
+Install the dvc version of your Cloud Provider ie `pip install 'dvc['s3']'`   
 
 To get a better experience, please install the DVC extension on VSCode (Other Editor do not have this extension)
 
