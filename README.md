@@ -63,6 +63,8 @@ Make sure Docker is installed.
 
 After fork the REPO, get into the secret section and fill `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `DOCKER_HUB_USERNAME`, `DOCKER_HUB_ACCESS_TOKEN`
 
+You should also change the out Docker Hub repo in the CI/CD to push to your own one
+
 The you are good to go, and can follow the next step to run experiements.
 
 ## Usage
